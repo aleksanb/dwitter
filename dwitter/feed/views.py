@@ -54,7 +54,7 @@ def feed(request, page_nr, sort):
     dweets_per_page = 10
     first = (page - 1) * dweets_per_page
     last = page * dweets_per_page
-    dweet_count = Dweet.objects.filter(deleted=False).count()
+    dweet_count = Dweet.objects.count()
 
     if(first < 0 or first > dweet_count):
         raise Http404("No such page")
@@ -62,17 +62,17 @@ def feed(request, page_nr, sort):
         last = dweet_count
 
     if(sort == "top"):
-        dweet_list = (Dweet.objects.filter(deleted=False).annotate(num_likes=Count('likes'))
+        dweet_list = (Dweet.objects.annotate(num_likes=Count('likes'))
                       .order_by('-num_likes', '-posted')[first:last])
 
         next_url = reverse('top_feed_page', kwargs={'page_nr': page + 1})
         prev_url = reverse('top_feed_page', kwargs={'page_nr': page - 1})
     elif (sort == "new"):
-        dweet_list = Dweet.objects.filter(deleted=False).order_by('-posted')[first:last]
+        dweet_list = Dweet.objects.order_by('-posted')[first:last]
         next_url = reverse('new_feed_page', kwargs={'page_nr': page + 1})
         prev_url = reverse('new_feed_page', kwargs={'page_nr': page - 1})
     elif (sort == "hot"):
-        dweet_list = (Dweet.objects.filter(deleted=False).annotate(num_likes=Count('likes'))
+        dweet_list = (Dweet.objects.annotate(num_likes=Count('likes'))
                       .order_by('-hotness', '-posted')[first:last])
         next_url = reverse('hot_feed_page', kwargs={'page_nr': page + 1})
         prev_url = reverse('hot_feed_page', kwargs={'page_nr': page - 1})

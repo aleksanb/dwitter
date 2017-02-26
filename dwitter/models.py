@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class NotDeletedDweetManager(models.Manager):
+    def get_queryset(self):
+        return super(NotDeletedDweetManager, self).get_queryset().filter(deleted=False)
 
 class Dweet(models.Model):
     code = models.TextField()
@@ -12,6 +15,9 @@ class Dweet(models.Model):
     likes = models.ManyToManyField(User, related_name="liked")
     hotness = models.FloatField(default=1.0)
     deleted = models.BooleanField(default=False)
+
+    objects = NotDeletedDweetManager()
+    with_deleted = models.Manager()
 
     def delete(self):
         self.deleted = True
