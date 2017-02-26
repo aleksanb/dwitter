@@ -54,7 +54,7 @@ def feed(request, page_nr, sort):
     dweets_per_page = 10
     first = (page - 1) * dweets_per_page
     last = page * dweets_per_page
-    dweet_count = Dweet.objects.count()
+    dweet_count = Dweet.objects.filter(deleted=False).count()
 
     if(first < 0 or first > dweet_count):
         raise Http404("No such page")
@@ -62,17 +62,17 @@ def feed(request, page_nr, sort):
         last = dweet_count
 
     if(sort == "top"):
-        dweet_list = (Dweet.objects.annotate(num_likes=Count('likes'))
+        dweet_list = (Dweet.objects.filter(deleted=False).annotate(num_likes=Count('likes'))
                       .order_by('-num_likes', '-posted')[first:last])
 
         next_url = reverse('top_feed_page', kwargs={'page_nr': page + 1})
         prev_url = reverse('top_feed_page', kwargs={'page_nr': page - 1})
     elif (sort == "new"):
-        dweet_list = Dweet.objects.order_by('-posted')[first:last]
+        dweet_list = Dweet.objects.filter(deleted=False).order_by('-posted')[first:last]
         next_url = reverse('new_feed_page', kwargs={'page_nr': page + 1})
         prev_url = reverse('new_feed_page', kwargs={'page_nr': page - 1})
     elif (sort == "hot"):
-        dweet_list = (Dweet.objects.annotate(num_likes=Count('likes'))
+        dweet_list = (Dweet.objects.filter(deleted=False).annotate(num_likes=Count('likes'))
                       .order_by('-hotness', '-posted')[first:last])
         next_url = reverse('hot_feed_page', kwargs={'page_nr': page + 1})
         prev_url = reverse('hot_feed_page', kwargs={'page_nr': page - 1})
@@ -92,7 +92,7 @@ def feed(request, page_nr, sort):
 
 
 def dweet_show(request, dweet_id):
-    dweet = get_object_or_404(Dweet, id=dweet_id)
+    dweet = get_object_or_404(Dweet, id=dweet_id, deleted=False)
 
     context = {
         'dweet': dweet,
@@ -125,7 +125,7 @@ def dweet(request):
 
 @login_required
 def dweet_reply(request, dweet_id):
-    reply_to = get_object_or_404(Dweet, id=dweet_id)
+    reply_to = get_object_or_404(Dweet, id=dweet_id, deleted=False)
     d = Dweet(code=request.POST['code'],
               reply_to=reply_to,
               author=request.user,
@@ -145,7 +145,7 @@ def dweet_reply(request, dweet_id):
 @login_required
 @require_POST
 def dweet_delete(request, dweet_id):
-    dweet = get_object_or_404(Dweet, id=dweet_id)
+    dweet = get_object_or_404(Dweet, id=dweet_id, deleted=False)
     if(request.user == dweet.author or request.user.is_staff):
         dweet.delete()
         return HttpResponseRedirect(reverse('root'))
@@ -155,7 +155,7 @@ def dweet_delete(request, dweet_id):
 
 @ajax_login_required
 def like(request, dweet_id):
-    dweet = get_object_or_404(Dweet, id=dweet_id)
+    dweet = get_object_or_404(Dweet, id=dweet_id, deleted=False)
 
     if(dweet.likes.filter(id=request.user.id).exists()):
         liked = False

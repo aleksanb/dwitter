@@ -5,7 +5,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 
 @xframe_options_exempt
 def fullscreen_dweet(request, dweet_id):
-    dweet = get_object_or_404(Dweet, id=dweet_id)
+    dweet = get_object_or_404(Dweet, id=dweet_id, deleted=False)
 
     context = {'code': dweet.code
                }

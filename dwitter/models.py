@@ -5,12 +5,17 @@ from django.contrib.auth.models import User
 class Dweet(models.Model):
     code = models.TextField()
     posted = models.DateTimeField()
-    reply_to = models.ForeignKey("self", on_delete=models.SET_NULL,
+    reply_to = models.ForeignKey("self", on_delete=models.DO_NOTHING,
                                  null=True, blank=True)
 
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     likes = models.ManyToManyField(User, related_name="liked")
     hotness = models.FloatField(default=1.0)
+    deleted = models.BooleanField(default=False)
+
+    def delete(self):
+        self.deleted = True
+        self.save()
 
     def __unicode__(self):
         return 'd/' + str(self.id) + ' (' + self.author.username + ')'
