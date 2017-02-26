@@ -8,6 +8,9 @@ from django.db.models import Sum
 
 
 def user_feed(request, url_username, page_nr, sort):
+    if url_username == '[deleted]':
+        raise Http404('No User matches the given query.')
+
     user = get_object_or_404(User, username=url_username)
     page = int(page_nr)
     dweets_per_page = 10
