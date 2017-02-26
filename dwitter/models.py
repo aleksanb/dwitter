@@ -1,9 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class NotDeletedDweetManager(models.Manager):
     def get_queryset(self):
-        return super(NotDeletedDweetManager, self).get_queryset().filter(deleted=False)
+        base_queryset = super(NotDeletedDweetManager, self).get_queryset()
+        return base_queryset.filter(deleted=False)
+
 
 class Dweet(models.Model):
     code = models.TextField()
