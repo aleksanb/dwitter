@@ -125,7 +125,7 @@ def dweet(request):
 
 @login_required
 def dweet_reply(request, dweet_id):
-    reply_to = get_object_or_404(Dweet, id=dweet_id, deleted=False)
+    reply_to = get_object_or_404(Dweet, id=dweet_id)
     d = Dweet(code=request.POST['code'],
               reply_to=reply_to,
               author=request.user,
@@ -145,7 +145,7 @@ def dweet_reply(request, dweet_id):
 @login_required
 @require_POST
 def dweet_delete(request, dweet_id):
-    dweet = get_object_or_404(Dweet, id=dweet_id, deleted=False)
+    dweet = get_object_or_404(Dweet, id=dweet_id)
     if(request.user == dweet.author or request.user.is_staff):
         dweet.delete()
         return HttpResponseRedirect(reverse('root'))
@@ -155,7 +155,7 @@ def dweet_delete(request, dweet_id):
 
 @ajax_login_required
 def like(request, dweet_id):
-    dweet = get_object_or_404(Dweet, id=dweet_id, deleted=False)
+    dweet = get_object_or_404(Dweet, id=dweet_id)
 
     if(dweet.likes.filter(id=request.user.id).exists()):
         liked = False
