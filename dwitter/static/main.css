@@ -30,7 +30,6 @@ input[type=submit], input[type=button] {
   border: 1px solid black;
   background: white;
   border-radius:3px;
-  margin-top: 2px;
   display:inline-block;
 }
 
@@ -38,10 +37,11 @@ input[type=submit].dweet-button {
   float: right;
 }
 input[type=submit].delete-button {
-  font-weight:bold;
-  text-border:black;
-  color:white;
-  background-color:red;
+  color: red;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  font-size: 16px;
 }
 
 
@@ -317,6 +317,11 @@ iframe {
   text-align:center;
 }
 
+form.like {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 .like-button {
   background: #eee;
   border-radius: 4px;
@@ -356,11 +361,12 @@ iframe {
 }
 
 .character-count {
-  float:right;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .character-count.too-long {
-  color:red;
+  color: red;
 }
 
 
@@ -371,7 +377,6 @@ iframe {
 .fullscreen-button, .share-button {
   text-align:right;
   float:right;
-  line-height: 26px;
   padding:5px;
 }
 
@@ -383,9 +388,12 @@ iframe {
 }
 
 .dweet-timestamp{
-  clear:both;
-  text-align: right;
-  padding-top: 10px;
+  float: right;
+  display: inline-block;
+  vertical-align: middle;
+  color:gray;
+  font-size:small;
+  font-family: Pragmata, Menlo, 'DejaVu LGC Sans Mono', 'DejaVu Sans Mono', Consolas, 'Everson Mono', 'Lucida Console', 'Andale Mono', 'Nimbus Mono L', 'Liberation Mono', FreeMono, 'Osaka Monospaced', Courier, 'New Courier', monospace;
 }
 
 .dweet-actions {
@@ -427,4 +435,31 @@ body.hot .top-sort-list a.hot {
 
 .delete {
   color: #b22;
+}
+
+.dweet .dark-section {
+  margin-top: 15px;
+  margin-left: -15px;
+  margin-right: -15px;
+  margin-bottom: -15px;
+  background: #222;
+  padding: 0 15px 15px;
+}
+
+.dark-section .dweet-code textarea {
+  background: transparent; 
+  border: 0;
+  color: white;
+  outline: 0;
+}
+
+.dark-section .dweet-code textarea:focus {
+  outline: 0;
+}
+
+.dweet-delete-form {
+  float: right;
+  display: inline-block;
+  vertical-align: middle;
+
 }
